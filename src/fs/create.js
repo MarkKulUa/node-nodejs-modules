@@ -1,10 +1,9 @@
 import { writeFile, access } from 'fs/promises';
-import { join } from 'path';
+import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
-import path from 'path';
 
 const create = async () => {
-    const __dirname = path.dirname(fileURLToPath(new URL(import.meta.url)));
+    const __dirname = dirname(fileURLToPath(import.meta.url));
     const filePath = join(__dirname, 'files', 'fresh.txt');
     let fileExists = true;
 
