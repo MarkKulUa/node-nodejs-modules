@@ -6,6 +6,8 @@ const create = async () => {
     const __dirname = dirname(fileURLToPath(import.meta.url));
     const filePath = join(__dirname, 'files', 'fresh.txt');
     let fileExists = true;
+    const defaultErrorMsg = 'FS operation failed';
+
 
     try {
         await access(filePath);
@@ -14,13 +16,13 @@ const create = async () => {
     }
 
     if (fileExists) {
-        throw new Error('FS operation failed. File exists');
+        throw new Error(defaultErrorMsg);
     }
 
     try {
         await writeFile(filePath, 'I am fresh and young', 'utf-8');
     } catch {
-        throw new Error('FS operation failed');
+        throw new Error(defaultErrorMsg);
     }
 };
 

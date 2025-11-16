@@ -6,23 +6,24 @@ const rename = async () => {
     const __dirname = dirname(fileURLToPath(import.meta.url));
     const srcFilePath = join(__dirname, 'files', 'wrongFilename.txt');
     const destFilePath = join(__dirname, 'files', 'properFilename.md');
+    const defaultErrorMsg = 'FS operation failed';
 
     const destFileExists = await access(destFilePath).then(() => true).catch(() => false);
 
     if (destFileExists) {
-        throw new Error('FS operation failed. Dest file already exists');
+        throw new Error(defaultErrorMsg);
     }
 
     try {
         await access(srcFilePath);
     } catch (err) {
-        throw new Error('FS operation failed. Src file does not exist');
+        throw new Error(defaultErrorMsg);
     }
 
     try {
         await fsRename(srcFilePath, destFilePath);
     } catch {
-        throw new Error('FS operation failed. Renaming failed');
+        throw new Error(defaultErrorMsg);
     }
 }
 
