@@ -37,7 +37,7 @@ const goodbye = () => {
 const handleUp = () => {
     const parentDir = path.dirname(currentDir);
 
-    if (parentDir === 'root') {
+    if (parentDir === currentDir) {
         return;
     }
 
@@ -75,7 +75,7 @@ const handleLs = async () => {
 };
 
 // ============ FILE OPERATIONS ============
-const handleCat = async (filePath, limit = 100) => {
+const handleCat = async (filePath, limit) => {
     const absolutePath = path.resolve(currentDir, filePath);
     const stats = await stat(absolutePath);
 
