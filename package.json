@@ -32,8 +32,9 @@
     "test:verbose": "jest --verbose",
     "build": "tsc",
     "dev:crud": "tsx watch src/crud-api/server.ts",
-    "build:crud": "esbuild src/crud-api/server.ts --bundle --platform=node --outfile=dist/server.js",
-    "start:prod": "node dist/server.js"
+    "build:crud": "esbuild src/crud-api/server.ts --bundle --platform=node --target=node24 --format=esm --outfile=dist/server.js --minify",
+    "start:prod": "node --env-file=.env dist/server.js",
+    "start:dev": "npm run dev:crud"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.24.0",
