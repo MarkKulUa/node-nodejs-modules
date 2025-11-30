@@ -5,14 +5,14 @@ import {isValidAge, isValidHobbies, isValidUserName, isValidUUID, parseBody} fro
 export class UserController {
 
     // GET /api/users
-    static getAllUsers(req: IncomingMessage, res: ServerResponse) {
+    static getAllUsers(_req: IncomingMessage, res: ServerResponse) {
         const users = db.getAllUsers();
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify(users));
     }
 
     // GET /api/users/{userId}
-    static getUserById(req: IncomingMessage, res: ServerResponse, userId: string) {
+    static getUserById(_req: IncomingMessage, res: ServerResponse, userId: string) {
 
         if (!isValidUUID(userId)) {
             res.writeHead(400, { 'Content-Type': 'application/json' });
@@ -92,7 +92,7 @@ export class UserController {
     }
 
     // DELETE /api/users/{userId}
-    static deleteUser(req: IncomingMessage, res: ServerResponse, userId: string) {
+    static deleteUser(_req: IncomingMessage, res: ServerResponse, userId: string) {
 
         if (!isValidUUID(userId)) {
             res.writeHead(400, { 'Content-Type': 'application/json' });
