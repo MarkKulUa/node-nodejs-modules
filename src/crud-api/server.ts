@@ -1,38 +1,46 @@
 import http, { IncomingMessage, ServerResponse } from 'http';
 import { config } from './config/env';
 import { UserController } from './controllers/userController';
+import { handleServerError, handle404 } from './utils/errorHandler';
 
-const server = http.createServer((req: IncomingMessage, res: ServerResponse) => {
-    const { method, url } = req;
+const server = http.createServer(async (req: IncomingMessage, res: ServerResponse) => {
+    try {
+        const { method, url } = req;
+        const urlParts = url?.split('?')[0]?.split('/').filter(Boolean);
 
-    const urlParts = url?.split('?')[0]?.split('/').filter(Boolean);
+        // GET /api/users
+        if (method === 'GET' && url === '/api/users') {
+            return UserController.getAllUsers(req, res);
+        }
 
-    if (method === 'GET' && url === '/api/users') {
-        return UserController.getAllUsers(req, res);
+        // GET /api/users/{userId}
+        if (method === 'GET' && urlParts?.[0] === 'api' && urlParts?.[1] === 'users' && urlParts?.[2]) {
+            const userId = urlParts[2];
+            return UserController.getUserById(req, res, userId);
+        }
+
+        // POST /api/users
+        if (method === 'POST' && url === '/api/users') {
+            return await UserController.createUser(req, res);
+        }
+
+        // PUT /api/users/{userId}
+        if (method === 'PUT' && urlParts?.[0] === 'api' && urlParts?.[1] === 'users' && urlParts?.[2]) {
+            const userId = urlParts[2];
+            return await UserController.updateUser(req, res, userId);
+        }
+
+        // DELETE /api/users/{userId}
+        if (method === 'DELETE' && urlParts?.[0] === 'api' && urlParts?.[1] === 'users' && urlParts?.[2]) {
+            const userId = urlParts[2];
+            return UserController.deleteUser(req, res, userId);
+        }
+
+        handle404(res);
+
+    } catch (error) {
+        handleServerError(res, error);
     }
-
-    // GET /api/users/{userId}
-    if (method === 'GET' && urlParts?.[0] === 'api' && urlParts?.[1] === 'users' && urlParts?.[2]) {
-        const userId = urlParts[2];
-        return UserController.getUserById(req, res, userId);
-    }
-
-    if (method === 'POST' && url === '/api/users') {
-        return UserController.createUser(req, res);
-    }
-
-    if (method === 'PUT' && urlParts?.[0] === 'api' && urlParts?.[1] === 'users' && urlParts?.[2]) {
-        const userId = urlParts[2];
-        return UserController.updateUser(req, res, userId);
-    }
-
-    if (method === 'DELETE' && urlParts?.[0] === 'api' && urlParts?.[1] === 'users' && urlParts?.[2]) {
-        const userId = urlParts[2];
-        return UserController.deleteUser(req, res, userId);
-    }
-
-    res.writeHead(404, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ message: 'Route not found' }));
 });
 
 server.listen(config.port, () => {
