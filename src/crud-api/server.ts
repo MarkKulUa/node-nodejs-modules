@@ -3,8 +3,13 @@ import { createApp } from './app';
 
 const server = createApp();
 
-server.listen(config.port, () => {
-    console.log(`Server is running on http://localhost:${config.port}`);
+const port = process.env.WORKER_PORT
+    ? parseInt(process.env.WORKER_PORT)
+    : config.port;
+
+server.listen(port, () => {
+    const workerId = process.env.WORKER_ID || 'main';
+    console.log(`Server (worker ${workerId}) running on http://localhost:${port}`);
 });
 
 // Graceful shutdown

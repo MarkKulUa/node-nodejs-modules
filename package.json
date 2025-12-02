@@ -32,9 +32,13 @@
     "test:verbose": "jest --verbose",
     "build": "tsc",
     "dev:crud": "tsx watch src/crud-api/server.ts",
-    "build:crud": "esbuild src/crud-api/server.ts --bundle --platform=node --target=node24 --format=esm --outfile=dist/server.js --minify",
     "start:prod": "node --env-file=.env dist/server.js",
-    "start:dev": "npm run dev:crud"
+    "start:dev": "npm run dev:crud",
+    "build:server": "esbuild src/crud-api/server.ts --bundle --platform=node --target=node24 --format=esm --outfile=dist/server.js --minify --external:dotenv --external:uuid",
+    "build:worker": "esbuild src/crud-api/worker.ts --bundle --platform=node --target=node24 --format=esm --outfile=dist/worker.js --minify --external:dotenv --external:uuid",
+    "build:cluster": "esbuild src/crud-api/cluster.ts --bundle --platform=node --target=node24 --format=esm --outfile=dist/cluster.js --minify --external:dotenv --external:uuid --external:./worker.js",
+    "build:crud": "npm run build:worker && npm run build:cluster",
+    "start:multi": "npm run build:crud && node --env-file=.env dist/cluster.js"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.24.0",

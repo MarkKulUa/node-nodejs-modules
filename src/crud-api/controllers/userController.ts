@@ -1,5 +1,6 @@
 import { IncomingMessage, ServerResponse } from 'http';
-import { db } from '../database/inMemoryDb';
+// import { db } from '../database/inMemoryDb';
+import { db } from '../database/sharedDb';
 import {isValidAge, isValidHobbies, isValidUserName, isValidUUID, parseBody} from '../utils/validation';
 
 export class UserController {
